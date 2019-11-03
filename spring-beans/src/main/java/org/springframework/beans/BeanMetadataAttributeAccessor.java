@@ -42,6 +42,10 @@ public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport impl
 		this.source = source;
 	}
 
+	/**
+	 *
+	 * @return 返回Bean所在磁盘上的路径
+	 */
 	@Override
 	@Nullable
 	public Object getSource() {

@@ -39,6 +39,10 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * @see BeanMetadataAttributeAccessor 继承了 AttributeAccessorSupport
+ * AttributeAccessorSupport 中存放了一个 map
+ * 通常用于存放一些BeanDefinition中没有定义的bean的描述信息
+ *
  * Base class for concrete, full-fledged {@link BeanDefinition} classes,
  * factoring out common properties of {@link GenericBeanDefinition},
  * {@link RootBeanDefinition}, and {@link ChildBeanDefinition}.
