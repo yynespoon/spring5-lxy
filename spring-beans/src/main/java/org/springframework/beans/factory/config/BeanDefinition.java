@@ -88,6 +88,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	// Modifiable attributes
 
 	/**
+	 * 设置父 BeanDefinition
+	 *
 	 * Set the name of the parent definition of this bean definition, if any.
 	 */
 	void setParentName(@Nullable String parentName);
@@ -169,7 +171,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String[] getDependsOn();
 
 	/**
-	 * 设置是否进行自动注入的判断
+	 * 是否设置进行自动注入的候选对象
 	 *
 	 * 将 A类型 通过 byType 自动注入到 B 中, 但是 A类型 的实现类有两个 A1, A2 如果不进行配置那么在 B 中获取
 	 * A类型的属性时会获取到 空值. 但是如果 A1.setAutowireCandidate(false) 那么会把 A2 注入到 B 中
@@ -188,6 +190,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isAutowireCandidate();
 
 	/**
+	 * 与 setAutowireCandidate(boolean) 类似
+	 *
 	 * Set whether this bean is a primary autowire candidate.
 	 * <p>If this value is {@code true} for exactly one bean among multiple
 	 * matching candidates, it will serve as a tie-breaker.
@@ -229,6 +233,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getFactoryMethodName();
 
 	/**
+	 * 实例化 bean 构造方法的参数zhi
+	 *
 	 * Return the constructor argument values for this bean.
 	 * <p>The returned instance can be modified during bean factory post-processing.
 	 * @return the ConstructorArgumentValues object (never {@code null})
@@ -236,6 +242,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	ConstructorArgumentValues getConstructorArgumentValues();
 
 	/**
+	 * 是否有构造参数
+	 *
 	 * Return if there are constructor argument values defined for this bean.
 	 * @since 5.0.2
 	 */
@@ -244,6 +252,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	}
 
 	/**
+	 * 属性值
+	 *
 	 * Return the property values to be applied to a new instance of the bean.
 	 * <p>The returned instance can be modified during bean factory post-processing.
 	 * @return the MutablePropertyValues object (never {@code null})
@@ -259,6 +269,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	}
 
 	/**
+	 * 设置初始化方法的名字
+	 *
 	 * Set the name of the initializer method.
 	 * @since 5.1
 	 */
@@ -272,6 +284,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	String getInitMethodName();
 
 	/**
+	 * 设置销毁方法的名字
+	 *
 	 * Set the name of the destroy method.
 	 * @since 5.1
 	 */
@@ -347,6 +361,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isPrototype();
 
 	/**
+	 * 指定该属性可以不指定class 表明这是一个专门放置共有 BeanDefinition配置的 BeanDefinition
+	 * 
 	 * Return whether this bean is "abstract", that is, not meant to be instantiated.
 	 */
 	boolean isAbstract();

@@ -43,8 +43,14 @@ import org.springframework.util.ObjectUtils;
  */
 public class ConstructorArgumentValues {
 
+	/**
+	 * key 为下标 value 为参数值的包装对象
+	 */
 	private final Map<Integer, ValueHolder> indexedArgumentValues = new LinkedHashMap<>();
 
+	/**
+	 * 如果不使用下标则参数值放于下面对象中
+	 */
 	private final List<ValueHolder> genericArgumentValues = new ArrayList<>();
 
 

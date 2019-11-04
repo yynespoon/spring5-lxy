@@ -22,6 +22,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 /**
+ *
+ * 子 BeanDefinition 最大的局限性在于创建的时候一定要指定父 BeanDefinition
+ * 不能作为一个独立的 BeanDefinition 出现
+ *
+ * 起源于早期想使用相同配置时不用每个BeanDefinition都设置相同的属性
+ * 可以通过 setParent 指定父类共有配置
+ *
  * Bean definition for beans which inherit settings from their parent.
  * Child bean definitions have a fixed dependency on a parent bean definition.
  *

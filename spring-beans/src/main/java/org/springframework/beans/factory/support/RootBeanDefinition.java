@@ -34,6 +34,16 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 根 BeanDefinition 最大局限性在于不能设置父类
+ * 起源与早期可以配置共有的 BeanDefinition 属性供子类使用
+ *
+ * 可作为一个独立的 BeanDefinition 出现
+ * 如果仅仅当作一个 BeanDefinition 的父类使用而不想指定class 可以将 abstract = true
+ *
+ * 不能去掉的原因是在之后构建容器中会 mergeBeanDefinition 对 BeanDefinition 进行合并必须要使用父类接受
+ * 类似于父类引用指向子类实体
+ *
  * A root bean definition represents the merged bean definition that backs
  * a specific bean in a Spring BeanFactory at runtime. It might have been created
  * from multiple original bean definitions that inherit from each other,
