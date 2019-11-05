@@ -362,7 +362,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
 	 * 指定该属性可以不指定class 表明这是一个专门放置共有 BeanDefinition配置的 BeanDefinition
-	 * 
+	 *
 	 * Return whether this bean is "abstract", that is, not meant to be instantiated.
 	 */
 	boolean isAbstract();

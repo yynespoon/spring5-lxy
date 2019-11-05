@@ -24,6 +24,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 通过创建 AnnotationConfigApplication 解析Class配置文件时会创建这个BeanDefinition
+ * 继承自 GenericBeanDefinition 可以实现GeneticBeanDefinition中的功能
+ *
  * Extension of the {@link org.springframework.beans.factory.support.GenericBeanDefinition}
  * class, adding support for annotation metadata exposed through the
  * {@link AnnotatedBeanDefinition} interface.

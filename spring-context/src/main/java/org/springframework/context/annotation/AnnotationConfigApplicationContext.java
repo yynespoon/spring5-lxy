@@ -63,6 +63,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		//注册一个reader
+		//为什么不直接创建 AnnotatedGenericBeanDefinition
+		//因为创建该 BeanDefinition 需要指定 Class
+		//这行代码的意义在于不需要创建容器的时候就指定配置文件
+		//之后可以通过register灵活指定配置文件
+		//实际在register中就是创建了 AnnotatedGenericBeanDefinition
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
