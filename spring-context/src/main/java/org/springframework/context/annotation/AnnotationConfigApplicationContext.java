@@ -70,6 +70,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		//之后可以通过register灵活指定配置文件
 		//实际在register中就是创建了 AnnotatedGenericBeanDefinition
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//spring的扫描类
+		//通过扫描生成BeanDefinition就是在这里完成的
+		//mybatis就是通过自己定义ClassPathBeanDefinitionScanner完成扫描的
+		//具体扫描在refresh方法中
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -168,6 +172,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	}
 
 	/**
+	 * 可以手动进行扫描
+	 * 自动扫描是在refresh中
+	 *
 	 * Perform a scan within the specified base packages.
 	 * <p>Note that {@link #refresh()} must be called in order for the context
 	 * to fully process the new classes.

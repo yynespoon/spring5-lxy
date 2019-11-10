@@ -428,10 +428,14 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				if (resource.isReadable()) {
 					try {
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
+						//在这里使用TypeFilter对加了Component注解的类进行过滤
+						//过滤器的添加在创建ClassPathBeanDefinitionScanner进行的
 						if (isCandidateComponent(metadataReader)) {
+							//将扫描后的类包装成ScannedGenericBeanDefinition
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);
 							sbd.setSource(resource);
+							//这里对BeanDefinition的类型进行了过滤，剔除了无法实例化的类
 							if (isCandidateComponent(sbd)) {
 								if (debugEnabled) {
 									logger.debug("Identified candidate component class: " + resource);

@@ -129,6 +129,8 @@ class ComponentScanAnnotationParser {
 				return declaringClass.equals(className);
 			}
 		});
+		//进行调用ClassPathBeanDefinitionScanner进行解析
+		//也可以通过调用 AnnotationConfigApplicationContext#scan 进行解析
 		return scanner.doScan(StringUtils.toStringArray(basePackages));
 	}
 
