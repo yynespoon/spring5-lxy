@@ -86,7 +86,12 @@ final class PostProcessorRegistrationDelegate {
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+					//保存当前执行的postProcessor
+					//使用getBean获取而非new非常重要
+					//提供了很好的扩展性，如果使用new则在扩展该BeanDefinitionRegistryPostProcessor扩展点的时候
+					//如果使用到了注解将不起作用
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
+					//保存对应的beanName
 					processedBeans.add(ppName);
 				}
 			}

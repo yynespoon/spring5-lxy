@@ -69,6 +69,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		//这行代码的意义在于不需要创建容器的时候就指定配置文件
 		//之后可以通过register灵活指定配置文件
 		//实际在register中就是创建了 AnnotatedGenericBeanDefinition
+		//在其中注册了很重要的5个BeanDefinition为了在之后使用
+		//其中包括ConfigurationClassBeanDefinition 为了之后初始化 internalConfigurationAnnotationProcessor 使用 很重要
+		//注册了解析@Autowire注解的 AutowiredAnnotationBeanPostProcessor
+		//注册了解析@Resouce注解的 CommonAnnotationBeanPostProcessor
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		//spring的扫描类
 		//通过扫描生成BeanDefinition就是在这里完成的
