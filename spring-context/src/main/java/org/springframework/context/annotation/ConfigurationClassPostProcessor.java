@@ -273,11 +273,17 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
+			//判断是否已经解析过了配置类
+			//识别配置类主要通过 BeanDefinition 中存放 attribute 的 map 中的 CONFIGURATION_CLASS_ATTRIBUTE
+			//5.2之前的源码是通过是否等于full或者lite来判断的
+			//full跟lite的主要区别在于是否有@Configuration注解
 			if (beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE) != null) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
+			//是否是配置类注解@Configuration 或者 org.springframework.context.annotation.ConfigurationClassUtils.candidateIndicators即可
+			//还可以根据方法上是否配置@Bean来判断
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}

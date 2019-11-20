@@ -56,21 +56,30 @@ final class PostProcessorRegistrationDelegate {
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
+		//保存已经执行过的 postProcessor
 		Set<String> processedBeans = new HashSet<>();
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			//保存程序员通过 api 提供的仅实现了 BeanFactoryPostProcessor 但未执行 postProcessBeanFactory 方法的
+			//可能执行两次？？
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
+			//保存执行过 BeanDefinitionRegistryPostProcessor 中 postProcessBeanDefinitionRegistry 但未执行
+			//其父类接口 BeanFactoryPostProcessor 中 postProcessBeanFactory 方法的
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
+			//程序员提供的 通过 annotationConfigApplicationContext.addBeanFactoryPostProcessor 添加
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
+					//如果是 BeanDefinitionRegistryPostProcessor 类型则立即执行
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					registryProcessors.add(registryProcessor);
 				}
 				else {
+					//如果不是则添加到 regularPostProcessors 等到所有 BeanDefinitionRegistryPostProcessor
+					//执行后再执行
 					regularPostProcessors.add(postProcessor);
 				}
 			}
@@ -115,6 +124,8 @@ final class PostProcessorRegistrationDelegate {
 			currentRegistryProcessors.clear();
 
 			// Finally, invoke all other BeanDefinitionRegistryPostProcessors until no further ones appear.
+			//为什么使用循环
+			//因为获取到 BeanDefinitionRegistryPostProcessor 并执行的过成功中可能又动态往beanFactory中添加了新的 BeanDefinitionRegistryPostProcessor
 			boolean reiterate = true;
 			while (reiterate) {
 				reiterate = false;

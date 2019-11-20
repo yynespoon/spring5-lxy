@@ -25,6 +25,8 @@ import org.springframework.util.ObjectUtils;
  * 承上启下的 BeanDefinition 可作为父 BeanDefinition 也可以作为子 BeanDefinition
  * 突破了初始化必须指定父BeanDefinition 和 不能设置父BeanDefinition 的局限性
  *
+ * 通过xml配置文件配置的bean解析后生成该BeanDefinition
+ *
  * GenericBeanDefinition is a one-stop shop for standard bean definition purposes.
  * Like any bean definition, it allows for specifying a class plus optionally
  * constructor argument values and property values. Additionally, deriving from a

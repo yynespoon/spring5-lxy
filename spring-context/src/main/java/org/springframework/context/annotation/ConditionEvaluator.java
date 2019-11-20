@@ -72,6 +72,9 @@ class ConditionEvaluator {
 	}
 
 	/**
+	 * 实现Condition接口并重写match方法并在需要判断的类或方法上指定实现Condition接口的处理器类
+	 * 可以动态判断是否注入BeanDefinition
+	 *
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
 	 * @param metadata the meta data
 	 * @param phase the phase of the call

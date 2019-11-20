@@ -1,5 +1,6 @@
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author lixiaoyu
@@ -8,7 +9,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class TestStart {
 
 	public static void main(String[] args) {
-		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext();
-		annotationConfigApplicationContext.refresh();
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
+		context.setConfigLocation("classpath:spring.xml");
+		context.refresh();
 	}
 }
