@@ -74,7 +74,9 @@ class ConfigurationClassEnhancer {
 
 	// The callbacks to use. Note that these callbacks must be stateless.
 	private static final Callback[] CALLBACKS = new Callback[] {
+			//主要用于处理普通 Bean
 			new BeanMethodInterceptor(),
+			//主要用来处理 BeanFactory
 			new BeanFactoryAwareMethodInterceptor(),
 			NoOp.INSTANCE
 	};
@@ -95,6 +97,7 @@ class ConfigurationClassEnhancer {
 	 * @return the enhanced subclass
 	 */
 	public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader) {
+		//如果已经生成过代理则直接返回
 		if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Ignoring request to enhance %s as it has " +
@@ -120,6 +123,7 @@ class ConfigurationClassEnhancer {
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(configSuperClass);
+		//用来标记代理过的对象
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
 		enhancer.setUseFactory(false);
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
@@ -137,6 +141,7 @@ class ConfigurationClassEnhancer {
 		Class<?> subclass = enhancer.createClass();
 		// Registering callbacks statically (as opposed to thread-local)
 		// is critical for usage in an OSGi environment (SPR-5932)...
+		//注册实现了 MethodInterceptor 的回调函数
 		Enhancer.registerStaticCallbacks(subclass, CALLBACKS);
 		return subclass;
 	}
@@ -317,9 +322,11 @@ class ConfigurationClassEnhancer {
 					MethodProxy cglibMethodProxy) throws Throwable {
 
 			ConfigurableBeanFactory beanFactory = getBeanFactory(enhancedConfigInstance);
+			//会将当前正在执行的方法与方法名做一个映射用 map 维护
 			String beanName = BeanAnnotationHelper.determineBeanNameFor(beanMethod);
 
 			// Determine whether this bean is a scoped-proxy
+			//如果对代理对象做代理需要拿到原始的Class
 			if (BeanAnnotationHelper.isScopedProxy(beanMethod)) {
 				String scopedBeanName = ScopedProxyCreator.getTargetBeanName(beanName);
 				if (beanFactory.isCurrentlyInCreation(scopedBeanName)) {
@@ -334,6 +341,7 @@ class ConfigurationClassEnhancer {
 			// proxy that intercepts calls to getObject() and returns any cached bean instance.
 			// This ensures that the semantics of calling a FactoryBean from within @Bean methods
 			// is the same as that of referring to a FactoryBean within XML. See SPR-6602.
+			//todo 对 beanFactory 的处理 有时间看
 			if (factoryContainsBean(beanFactory, BeanFactory.FACTORY_BEAN_PREFIX + beanName) &&
 					factoryContainsBean(beanFactory, beanName)) {
 				Object factoryBean = beanFactory.getBean(BeanFactory.FACTORY_BEAN_PREFIX + beanName);
@@ -345,7 +353,7 @@ class ConfigurationClassEnhancer {
 					return enhanceFactoryBean(factoryBean, beanMethod.getReturnType(), beanFactory, beanName);
 				}
 			}
-
+			//判断当前执行的方法与这次要执行的方法是不是同一个
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
@@ -360,9 +368,10 @@ class ConfigurationClassEnhancer {
 									"these container lifecycle issues; see @Bean javadoc for complete details.",
 							beanMethod.getDeclaringClass().getSimpleName(), beanMethod.getName()));
 				}
+				//如果是则执行父类方法 即代理 target 对象的方法
 				return cglibMethodProxy.invokeSuper(enhancedConfigInstance, beanMethodArgs);
 			}
-
+			//如果当前执行的方法与要执行的方法不是同一个
 			return resolveBeanReference(beanMethod, beanMethodArgs, beanFactory, beanName);
 		}
 
@@ -379,6 +388,7 @@ class ConfigurationClassEnhancer {
 					beanFactory.setCurrentlyInCreation(beanName, false);
 				}
 				boolean useArgs = !ObjectUtils.isEmpty(beanMethodArgs);
+				//判断是否有构造参数
 				if (useArgs && beanFactory.isSingleton(beanName)) {
 					// Stubbed null arguments just for reference purposes,
 					// expecting them to be autowired for regular singleton references?
@@ -390,6 +400,7 @@ class ConfigurationClassEnhancer {
 						}
 					}
 				}
+				//直接通过 beanFactory 创建或者获取
 				Object beanInstance = (useArgs ? beanFactory.getBean(beanName, beanMethodArgs) :
 						beanFactory.getBean(beanName));
 				if (!ClassUtils.isAssignableValue(beanMethod.getReturnType(), beanInstance)) {
@@ -418,6 +429,7 @@ class ConfigurationClassEnhancer {
 						throw new IllegalStateException(msg);
 					}
 				}
+				//获取当前执行的 BeanName 与当前 BeanName 做关联放到 map 中
 				Method currentlyInvoked = SimpleInstantiationStrategy.getCurrentlyInvokedFactoryMethod();
 				if (currentlyInvoked != null) {
 					String outerBeanName = BeanAnnotationHelper.determineBeanNameFor(currentlyInvoked);

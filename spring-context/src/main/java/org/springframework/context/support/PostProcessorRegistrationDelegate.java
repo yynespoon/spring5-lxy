@@ -145,6 +145,7 @@ final class PostProcessorRegistrationDelegate {
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+			//标有 @Configuration 的配置类在这里生成代理
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
